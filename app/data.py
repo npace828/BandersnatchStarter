@@ -33,7 +33,7 @@ class Database:
         - bool: True if the seeding was successful, False otherwise.
         """
         # Extract monsters from MonsterLab
-        monsters = [Monster().to_dict() for _ in range(1, amount+1)]
+        monsters = [Monster().to_dict() for _ in range(1, amount + 1)]
 
         # Insert monsters into the collection
         result = self.collection.insert_many(monsters)
@@ -79,7 +79,6 @@ class Database:
 
 
 if __name__ == '__main__':
-   
     db = Database('bandersnatch')
 
     # Reset the collection, seed it with 1000 monsters, and print the count
@@ -92,6 +91,5 @@ if __name__ == '__main__':
 
     # Print the HTML table representation of the collection data
     print(db.html_table())
-
 
 
