@@ -37,6 +37,7 @@ class Database:
 
         # Insert monsters into the collection
         result = self.collection.insert_many(monsters)
+        print(f"Seeded {amount} monsters. Acknowledged: {result.acknowledged}")
         return result.acknowledged
 
     def reset(self):
