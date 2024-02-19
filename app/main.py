@@ -10,7 +10,7 @@ from app.data import Database
 from app.graph import chart
 from app.machine import Machine
 
-SPRINT = 2
+SPRINT = 3
 APP = Flask(__name__)
 
 
@@ -70,16 +70,15 @@ def view():
 
 @APP.route("/model", methods=["GET", "POST"])
 def model():
+
     if SPRINT < 3:
         return render_template("model.html")
-
-
-    db = Database("bandersnatch")
-
+    db = Database('bandersnatch')
     options = ["Level", "Health", "Energy", "Sanity", "Rarity"]
-    filepath = os.path.join("../app", "model.joblib")
-    if not os.path.exists(filepath):
-        df = db.dataframe()
+    filepath = "model.joblib"
+    df = db.dataframe()
+    retrain = request.values.get("retrain", type=bool)
+    if not os.path.exists(filepath) or retrain:
         machine = Machine(df[options])
         machine.save(filepath)
     else:
@@ -92,7 +91,7 @@ def model():
     prediction, confidence = machine(DataFrame(
         [dict(zip(options, (level, health, energy, sanity)))]
     ))
-    info = machine.info()
+    info = machine.info(machine.name, machine.timestamp)
     return render_template(
         "model.html",
         info=info,
@@ -101,7 +100,7 @@ def model():
         energy=energy,
         sanity=sanity,
         prediction=prediction,
-        confidence=f"{confidence:.2%}",
+        confidence=f"{confidence[0]:.2%}"
     )
 
 
